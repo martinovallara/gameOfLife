@@ -1,5 +1,8 @@
+import com.geamOfLife.Cell;
 import org.junit.Test;
 
+import static com.geamOfLife.Cell.DEAD;
+import static com.geamOfLife.Cell.LIVE;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GameOfLifeTest {
@@ -10,12 +13,10 @@ public class GameOfLifeTest {
     //   3. Any live cell with two or three live neighbours lives on to the next generation.
     //   4. Any dead cell with exactly three live neighbours becomes a live cell.
 
-    static boolean LIVE = true;
-    static boolean DEAD = false;
 
     @Test
     public void cellDiesWhenNeighboursFewerTwo() {
-        Cell cell = new Cell();
+        Cell cell = new Cell(LIVE);
         cell.addNeighbours(LIVE, DEAD);
 
         assertThat(cell.next()).isEqualTo(DEAD);
@@ -23,7 +24,7 @@ public class GameOfLifeTest {
 
     @Test
     public void cellDiesWhenNeighboursMoreTree() {
-        Cell cell = new Cell();
+        Cell cell = new Cell(LIVE);
 
         cell.addNeighbours(LIVE, LIVE, LIVE, LIVE);
 
@@ -32,10 +33,33 @@ public class GameOfLifeTest {
 
     @Test
     public void cellLiveWhenNeighboursTwoOrThree() {
-        Cell cell = new Cell();
+        Cell cell = new Cell(LIVE);
 
         cell.addNeighbours(LIVE, DEAD, LIVE);
 
         assertThat(cell.next()).isEqualTo(LIVE);
+
+        cell.addNeighbours(LIVE, LIVE, LIVE);
+        assertThat(cell.next()).isEqualTo(LIVE);
+    }
+
+
+    @Test
+    public void cellLDiedWillLiveWhenNeighboursThree() {
+        Cell cell = new Cell(DEAD);
+
+        cell.addNeighbours(LIVE, LIVE, LIVE);
+
+        assertThat(cell.next()).isEqualTo(LIVE);
+    }
+
+    @Test
+    public void cellLDiedRemainsDeadWhenNeighboursTwo() {
+        Cell cell = new Cell(DEAD);
+
+        cell.addNeighbours(LIVE, DEAD, LIVE);
+
+        assertThat(cell.next()).isEqualTo(DEAD);
+
     }
 }
